@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Train;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Faker\Factory as Faker;
 
 class TrainsTableSeeder extends Seeder
 {
@@ -16,22 +17,23 @@ class TrainsTableSeeder extends Seeder
      */
     public function run()
     {
-        for($i = 0; $i < 10; $i++) {
-           DB::table('trains')->insert([
-            'azienda' => 'Trenitalia',
-            'stazione_di_partenza' => 'Milano' . $i,
-            'stazione_di_arrivo' => 'Roma' . $i,
-            'orario_di_partenza' => '10:30:00' . $i,
-            'orario_di_arrivo' => '15:30:00' . $i,
-            'codice_treno' => '12345' . $i,
-            'numero_carrozze' => 5,
-            'in_orario' => 1,
-            'cancellato' => 0,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-            'date' => Carbon::now()->toDateString(),
-        ]);
-        }
+        $faker = Faker::create();
 
+        for ($i = 0; $i < 10; $i++) {
+            Train::create([
+                'azienda' => 'Trenitalia',
+                'stazione_di_partenza' => $faker->city,
+                'stazione_di_arrivo' => $faker->city,
+                'orario_di_partenza' => $faker->time('H:i:s'),
+                'orario_di_arrivo' => $faker->time('H:i:s'),
+                'codice_treno' => $faker->numberBetween(10000, 99999),
+                'numero_carrozze' => $faker->numberBetween(1, 10),
+                'in_orario' => $faker->boolean,
+                'cancellato' => 0,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'date' => Carbon::now()->toDateString(),
+            ]);
+        }
     }
 }
